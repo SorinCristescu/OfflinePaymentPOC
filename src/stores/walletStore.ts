@@ -12,6 +12,7 @@ import { bankMockService } from '../services/wallet/BankMockService';
 import { transactionService } from '../services/wallet/TransactionService';
 import { validateTransfer } from '../utils/validation';
 import { BALANCE_LIMITS } from '../utils/constants';
+import { KeyManagementService, KeyIds } from '../services/security/KeyManagementService';
 
 interface WalletStore extends WalletState {
   // Loading and error states
@@ -38,16 +39,34 @@ export const useWalletStore = create<WalletStore>((set, get) => ({
 
   /**
    * Initialize wallet from storage or create new
+   * Ensures hardware keys exist before loading encrypted wallet
    */
   initializeWallet: async () => {
     try {
       set({ isLoading: true, error: null });
+
+      console.log('[walletStore] Initializing wallet with hardware security...');
+
+      // Ensure device master key exists for wallet encryption
+      const keyExists = await KeyManagementService.keyExists(KeyIds.DEVICE_MASTER);
+      if (!keyExists) {
+        console.log('[walletStore] Device master key not found, generating...');
+        await KeyManagementService.generateKeyPair(KeyIds.DEVICE_MASTER, false);
+        console.log('[walletStore] Device master key generated successfully');
+      } else {
+        console.log('[walletStore] Device master key already exists');
+      }
+
+      // Initialize wallet with encrypted storage
       const walletState = await balanceService.initializeWallet();
+      console.log('[walletStore] Wallet initialized successfully');
+
       set({
         ...walletState,
         isLoading: false,
       });
     } catch (error) {
+      console.error('[walletStore] Failed to initialize wallet:', error);
       set({
         error: error instanceof Error ? error.message : 'Failed to initialize wallet',
         isLoading: false,

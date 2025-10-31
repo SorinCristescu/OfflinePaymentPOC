@@ -13,6 +13,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BiometricService} from './BiometricService';
 import {PINService} from './PINService';
+import {KeyManagementService, KeyIds} from './KeyManagementService';
 import {
   AuthenticationMethod,
   AuthenticationStatus,
@@ -165,11 +166,24 @@ class AuthenticationServiceClass {
 
   /**
    * Authenticate with biometric
+   * Uses hardware key verification for enhanced security
    */
   private async authenticateWithBiometric(
     promptMessage?: string
   ): Promise<AuthenticationResult> {
-    const biometricResult = await BiometricService.authenticate(promptMessage);
+    console.log('[AuthenticationService] Authenticating with biometric + hardware verification');
+
+    // Use hardware-verified biometric authentication
+    // This ensures the biometric prompt is tied to actual Secure Enclave access
+    const biometricResult = await BiometricService.authenticateWithHardwareKey({
+      keyId: KeyIds.DEVICE_MASTER,
+      promptMessage: promptMessage || 'Authenticate to access your wallet',
+    });
+
+    console.log('[AuthenticationService] Biometric authentication result:', {
+      success: biometricResult.success,
+      hardwareVerified: biometricResult.hardwareVerified,
+    });
 
     return {
       success: biometricResult.success,

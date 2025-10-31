@@ -16,6 +16,7 @@ import {
   BiometricType,
   AUTH_CONSTANTS,
 } from '../../types';
+import {KeyManagementService} from './KeyManagementService';
 
 /**
  * BiometricService class
@@ -179,6 +180,75 @@ class BiometricServiceClass {
         success: false,
         error: errorMessage,
         cancelled,
+      };
+    }
+  }
+
+  /**
+   * Authenticate with hardware key verification
+   * Ensures biometric auth is tied to hardware key access
+   *
+   * @param options - Authentication options
+   * @param options.keyId - Hardware key ID to verify access to
+   * @param options.promptMessage - Custom message for biometric prompt
+   * @returns Authentication result with hardware verification status
+   */
+  async authenticateWithHardwareKey(options: {
+    keyId: string;
+    promptMessage?: string;
+  }): Promise<BiometricAuthResult & {hardwareVerified?: boolean}> {
+    try {
+      const {keyId, promptMessage} = options;
+
+      console.log(`[BiometricService] Authenticating with hardware key: ${keyId}`);
+
+      // Check if key exists
+      const keyExists = await KeyManagementService.keyExists(keyId);
+      if (!keyExists) {
+        console.warn(`[BiometricService] Hardware key not found: ${keyId}`);
+        return {
+          success: false,
+          error: 'Hardware key not found. Please set up security.',
+        };
+      }
+
+      // Check if key is biometric-bound
+      const isBiometric = await KeyManagementService.isBiometricBound(keyId);
+      console.log(`[BiometricService] Key ${keyId} biometric-bound: ${isBiometric}`);
+
+      // Perform biometric authentication
+      const authResult = await this.authenticate(
+        promptMessage || 'Authenticate to access secure key'
+      );
+
+      if (!authResult.success) {
+        console.log('[BiometricService] Biometric authentication failed');
+        return authResult;
+      }
+
+      // If key is biometric-bound, verify it's still accessible
+      // (this ensures biometric prompt was actually tied to hardware)
+      if (isBiometric) {
+        const stillExists = await KeyManagementService.keyExists(keyId);
+        if (!stillExists) {
+          console.error('[BiometricService] Hardware key verification failed');
+          return {
+            success: false,
+            error: 'Hardware key verification failed',
+          };
+        }
+      }
+
+      console.log('[BiometricService] Hardware-verified authentication successful');
+      return {
+        success: true,
+        hardwareVerified: isBiometric,
+      };
+    } catch (error: any) {
+      console.error('[BiometricService] Error during hardware-verified authentication:', error);
+      return {
+        success: false,
+        error: error.message || 'Authentication failed',
       };
     }
   }

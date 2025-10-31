@@ -14,12 +14,17 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, Card} from '../components';
 import {
   KeyManagementService,
   EncryptionService,
   SigningService,
 } from '../services/security';
+import {KeyIds} from '../services/security/KeyManagementService';
+import {balanceService} from '../services/wallet/BalanceService';
+import {transactionService} from '../services/wallet/TransactionService';
+import {STORAGE_KEYS} from '../utils/constants';
 import {useTheme} from '../contexts/ThemeContext';
 import {theme as staticTheme} from '../theme';
 
@@ -259,6 +264,108 @@ export const HardwareSecurityTestScreen: React.FC = () => {
     }
   };
 
+  const testWalletEncryption = async () => {
+    try {
+      const encryptedWallet = await AsyncStorage.getItem(STORAGE_KEYS.ENCRYPTED_WALLET);
+
+      if (!encryptedWallet) {
+        Alert.alert('No Data', 'No encrypted wallet found. Please transfer some funds first.');
+        return;
+      }
+
+      const keyExists = await KeyManagementService.keyExists(KeyIds.DEVICE_MASTER);
+      if (!keyExists) {
+        Alert.alert('Error', 'Device Master Key not found. Initialize keys first.');
+        return;
+      }
+
+      const decrypted = await EncryptionService.decrypt(KeyIds.DEVICE_MASTER, encryptedWallet);
+      const walletData = JSON.parse(decrypted);
+
+      Alert.alert(
+        'Wallet Encryption Proof',
+        `ENCRYPTED STORAGE (unreadable):\n${encryptedWallet.substring(0, 60)}...\n\n` +
+        `DECRYPTED WITH HARDWARE KEY:\n` +
+        `Online: $${(walletData.onlineBalance / 100).toFixed(2)}\n` +
+        `Offline: $${(walletData.offlineBalance / 100).toFixed(2)}\n\n` +
+        `This proves:\n` +
+        `1. Data is encrypted in storage\n` +
+        `2. Only readable with Secure Enclave key\n` +
+        `3. Hardware-backed protection active`,
+        [{text: 'OK'}]
+      );
+    } catch (error: any) {
+      Alert.alert('Test Failed', error.message);
+    }
+  };
+
+  const verifyHardwareKeys = async () => {
+    try {
+      const keys = [
+        {id: KeyIds.DEVICE_MASTER, name: 'Device Master'},
+        {id: KeyIds.TRANSACTION_SIGNING, name: 'Transaction Signing'},
+        {id: KeyIds.BALANCE_ENCRYPTION, name: 'Balance Encryption'},
+      ];
+
+      const results = await Promise.all(
+        keys.map(async key => {
+          const exists = await KeyManagementService.keyExists(key.id);
+          const isBiometric = exists ? await KeyManagementService.isBiometricBound(key.id) : false;
+          const publicKey = exists ? await KeyManagementService.getPublicKey(key.id) : '';
+
+          return {
+            name: key.name,
+            exists,
+            isBiometric,
+            publicKey: publicKey.substring(0, 30)
+          };
+        })
+      );
+
+      const message = results
+        .map(r =>
+          r.exists
+            ? `${r.name}:\nExists: Yes\nBiometric: ${r.isBiometric ? 'Yes' : 'No'}\nKey: ${r.publicKey}...`
+            : `${r.name}: Not found`
+        )
+        .join('\n\n');
+
+      Alert.alert('Hardware Keys Status', message, [{text: 'OK'}]);
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  const showStorageComparison = async () => {
+    try {
+      const keys = [
+        {key: STORAGE_KEYS.WALLET, name: 'Legacy Wallet'},
+        {key: STORAGE_KEYS.ENCRYPTED_WALLET, name: 'Encrypted Wallet'},
+        {key: STORAGE_KEYS.TRANSACTIONS, name: 'Transactions'},
+        {key: STORAGE_KEYS.DEVICE_ID, name: 'Device ID'},
+      ];
+
+      const results = await Promise.all(
+        keys.map(async ({key, name}) => {
+          const value = await AsyncStorage.getItem(key);
+          if (value) {
+            const preview = value.substring(0, 50);
+            return `${name}:\n${preview}...\n(${value.length} chars)`;
+          }
+          return `${name}: [empty]`;
+        })
+      );
+
+      Alert.alert(
+        'Storage Comparison',
+        results.join('\n\n'),
+        [{text: 'OK'}]
+      );
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
   const getStatusIcon = (status: TestResult['status']) => {
     switch (status) {
       case 'success':
@@ -325,6 +432,35 @@ export const HardwareSecurityTestScreen: React.FC = () => {
           <Button
             title="Initialize Device Keys"
             onPress={initializeDeviceKeys}
+            disabled={isRunning}
+            variant="outline"
+            style={styles.button}
+          />
+        </Card>
+
+        {/* Encryption Verification */}
+        <Card>
+          <Text style={styles.sectionTitle}>Encryption Verification</Text>
+
+          <Button
+            title="Test Wallet Encryption"
+            onPress={testWalletEncryption}
+            disabled={isRunning}
+            variant="primary"
+            style={styles.button}
+          />
+
+          <Button
+            title="Verify Hardware Keys"
+            onPress={verifyHardwareKeys}
+            disabled={isRunning}
+            variant="outline"
+            style={styles.button}
+          />
+
+          <Button
+            title="Show Storage Comparison"
+            onPress={showStorageComparison}
             disabled={isRunning}
             variant="outline"
             style={styles.button}

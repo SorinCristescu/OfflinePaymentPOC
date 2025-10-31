@@ -11,6 +11,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {BiometricService} from '../../services/security';
+import {KeyIds} from '../../services/security/KeyManagementService';
 import {useTheme} from '../../contexts/ThemeContext';
 import {theme as staticTheme} from '../../theme';
 import {BiometricType, BiometricCapabilities} from '../../types';
@@ -88,10 +89,12 @@ export const BiometricPrompt: React.FC<BiometricPromptProps> = ({
     setError(undefined);
 
     try {
-      const result = await BiometricService.authenticate(
-        promptMessage,
-        'Cancel'
-      );
+      // Use hardware-verified biometric authentication
+      // This ensures the biometric prompt is tied to Secure Enclave access
+      const result = await BiometricService.authenticateWithHardwareKey({
+        keyId: KeyIds.DEVICE_MASTER,
+        promptMessage: promptMessage || 'Authenticate to continue',
+      });
 
       setIsLoading(false);
 

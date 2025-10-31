@@ -26,5 +26,6 @@ export const MOCK_BANK = {
 export const STORAGE_KEYS = {
   TRANSACTIONS: '@smvc_transactions',
   WALLET: '@smvc_wallet',
+  ENCRYPTED_WALLET: '@smvc_encrypted_wallet',
   DEVICE_ID: '@smvc_device_id',
 } as const;
