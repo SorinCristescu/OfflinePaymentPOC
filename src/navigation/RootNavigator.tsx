@@ -7,6 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from './types';
 import {TabNavigator} from './TabNavigator';
 import {TransferOnlineToOfflineScreen} from '../screens/TransferOnlineToOfflineScreen';
+import {HardwareSecurityTestScreen} from '../screens';
 import {useTheme} from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,6 +30,19 @@ export const RootNavigator: React.FC = () => {
         options={{
           headerShown: true,
           title: 'Transfer to Offline',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="HardwareSecurityTest"
+        component={HardwareSecurityTestScreen}
+        options={{
+          headerShown: true,
+          title: 'Hardware Security Test',
           headerStyle: {
             backgroundColor: theme.background.primary,
           },

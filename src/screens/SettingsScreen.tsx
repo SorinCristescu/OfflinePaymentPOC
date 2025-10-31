@@ -14,6 +14,9 @@ import {
   Modal,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../navigation/types';
 
 import {Card, Button} from '../components';
 import {useSettingsStore, useWalletStore, useTransactionStore, useAuthStore} from '../stores';
@@ -23,7 +26,10 @@ import {AuthenticationMethod, BiometricType} from '../types';
 import {SecuritySetupScreen} from './onboarding/SecuritySetupScreen';
 import {PINSetup} from '../components/security/PINSetup';
 
+type SettingsNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export const SettingsScreen: React.FC = () => {
+  const navigation = useNavigation<SettingsNavigationProp>();
   const {app, device, notifications, updateAppSettings, updateNotificationSettings} =
     useSettingsStore();
   const resetWallet = useWalletStore(state => state.reset);
@@ -239,6 +245,13 @@ export const SettingsScreen: React.FC = () => {
                   : theme.text.tertiary
               }
               theme={theme}
+            />
+
+            <Button
+              title="🔐 Test Hardware Security"
+              onPress={() => navigation.navigate('HardwareSecurityTest')}
+              variant="outline"
+              style={{marginTop: staticTheme.spacing.md}}
             />
           </Card>
         </View>

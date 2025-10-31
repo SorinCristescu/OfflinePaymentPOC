@@ -8,13 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-OfflinePaymentPOC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-OfflinePaymentPOC.a */; };
+		1153B76B6F5902859811086D /* SMVCSecurityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B81F3BCC722B8FA329D9CA9 /* SMVCSecurityModule.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A41D79505AA1DF86EF44B4D1 /* SMVCSecurityBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F80D913B716C10543AACCE0 /* SMVCSecurityBridge.m */; };
 		AE295262C6B7B577B4B2F256 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B81F3BCC722B8FA329D9CA9 /* SMVCSecurityModule.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SMVCSecurityModule.swift; path = OfflinePaymentPOC/SMVCSecurityModule.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* OfflinePaymentPOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflinePaymentPOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OfflinePaymentPOC/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OfflinePaymentPOC/Info.plist; sourceTree = "<group>"; };
@@ -24,6 +27,8 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-OfflinePaymentPOC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OfflinePaymentPOC.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = OfflinePaymentPOC/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OfflinePaymentPOC/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9B21765B04994345A6D2198E /* OfflinePaymentPOC-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "OfflinePaymentPOC-Bridging-Header.h"; path = "OfflinePaymentPOC/OfflinePaymentPOC-Bridging-Header.h"; sourceTree = "<group>"; };
+		9F80D913B716C10543AACCE0 /* SMVCSecurityBridge.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SMVCSecurityBridge.m; path = OfflinePaymentPOC/SMVCSecurityBridge.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -47,6 +52,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				0B81F3BCC722B8FA329D9CA9 /* SMVCSecurityModule.swift */,
+				9F80D913B716C10543AACCE0 /* SMVCSecurityBridge.m */,
+				9B21765B04994345A6D2198E /* OfflinePaymentPOC-Bridging-Header.h */,
 			);
 			name = OfflinePaymentPOC;
 			sourceTree = "<group>";
@@ -247,6 +255,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				1153B76B6F5902859811086D /* SMVCSecurityModule.swift in Sources */,
+				A41D79505AA1DF86EF44B4D1 /* SMVCSecurityBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +289,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sorin.OfflinePaymentPOC;
 				PRODUCT_NAME = OfflinePaymentPOC;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "OfflinePaymentPOC/OfflinePaymentPOC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -310,6 +321,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sorin.OfflinePaymentPOC;
 				PRODUCT_NAME = OfflinePaymentPOC;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "OfflinePaymentPOC/OfflinePaymentPOC-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -1,0 +1,11 @@
+//
+//  OfflinePaymentPOC-Bridging-Header.h
+//  OfflinePaymentPOC
+//
+//  Swift-Objective-C bridging header
+//
+
+#import <React/RCTBridgeModule.h>
+#import <React/RCTViewManager.h>
+#import <React/RCTEventEmitter.h>
+

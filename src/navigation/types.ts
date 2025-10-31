@@ -10,6 +10,7 @@ export type RootStackParamList = {
   TransferOnlineToOffline: undefined;
   SendPayment: undefined;
   TransactionDetails: {transactionId: string};
+  HardwareSecurityTest: undefined;
 };
 
 // Main Tab Navigator params

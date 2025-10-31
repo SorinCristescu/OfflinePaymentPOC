@@ -13,3 +13,6 @@ export {
   SecurityIntroScreen,
   SecuritySetupScreen,
 } from './onboarding';
+
+// Test screens
+export {HardwareSecurityTestScreen} from './HardwareSecurityTestScreen';
