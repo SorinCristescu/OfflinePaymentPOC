@@ -141,7 +141,7 @@ class DeviceIdentityServiceClass {
    * Creates a UUID v4-like identifier
    */
   private generateRandomId(): string {
-    // eslint-disable-next-line no-bitwise
+     
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       // eslint-disable-next-line no-bitwise
       const r = Math.random() * 16 | 0;

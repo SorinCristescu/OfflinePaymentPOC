@@ -116,6 +116,13 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // Android Security and Biometric dependencies for Phase 4
+    implementation "androidx.biometric:biometric:1.1.0"
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    // Kotlin coroutines for async operations
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 }
 
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

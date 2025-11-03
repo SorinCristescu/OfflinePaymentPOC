@@ -11,6 +11,14 @@ export type RootStackParamList = {
   SendPayment: undefined;
   TransactionDetails: {transactionId: string};
   HardwareSecurityTest: undefined;
+  // Phase 5: BLE Communication Foundation
+  PeerDiscovery: undefined;
+  Connection: {deviceId: string};
+  BLESettings: undefined;
+  // Phase 6: Offline Payment Protocol
+  SendPayment: undefined;
+  ReceivePayment: undefined;
+  PaymentHistory: undefined;
 };
 
 // Main Tab Navigator params

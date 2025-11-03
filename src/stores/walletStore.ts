@@ -22,6 +22,7 @@ interface WalletStore extends WalletState {
   // Actions
   initializeWallet: () => Promise<void>;
   transferOnlineToOffline: (amount: number) => Promise<void>;
+  updateOfflineBalance: (amount: number, operation: 'add' | 'subtract') => Promise<void>;
   clearError: () => void;
   reset: () => Promise<void>;
 }
@@ -161,6 +162,60 @@ export const useWalletStore = create<WalletStore>((set, get) => ({
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Transfer failed',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  /**
+   * Update offline balance for P2P payments
+   * Used when sending/receiving payments via BLE
+   */
+  updateOfflineBalance: async (amount: number, operation: 'add' | 'subtract') => {
+    const state = get();
+
+    try {
+      set({ isLoading: true, error: null });
+
+      console.log(`[walletStore] Updating offline balance: ${operation} ${amount / 100}`);
+
+      // Calculate new balance
+      const newOfflineBalance = operation === 'add'
+        ? state.offlineBalance + amount
+        : state.offlineBalance - amount;
+
+      // Validate new balance
+      if (newOfflineBalance < 0) {
+        throw new Error('Insufficient balance for payment');
+      }
+
+      if (newOfflineBalance > BALANCE_LIMITS.MAX_OFFLINE_BALANCE) {
+        throw new Error('Offline balance would exceed maximum limit');
+      }
+
+      // Update wallet state
+      const updatedWallet: WalletState = {
+        ...state,
+        offlineBalance: newOfflineBalance,
+        lastSyncTimestamp: new Date(),
+      };
+
+      // Save to storage with hardware encryption
+      await balanceService.saveWallet(updatedWallet);
+
+      // Update store
+      set({
+        ...updatedWallet,
+        isLoading: false,
+        error: null,
+      });
+
+      console.log(`[walletStore] Balance updated: ${newOfflineBalance / 100}`);
+    } catch (error) {
+      console.error('[walletStore] Failed to update balance:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update balance',
         isLoading: false,
       });
       throw error;

@@ -8,6 +8,14 @@ import {RootStackParamList} from './types';
 import {TabNavigator} from './TabNavigator';
 import {TransferOnlineToOfflineScreen} from '../screens/TransferOnlineToOfflineScreen';
 import {HardwareSecurityTestScreen} from '../screens';
+import {
+  PeerDiscoveryScreen,
+  ConnectionScreen,
+  BLESettingsScreen,
+  SendPaymentScreen,
+  ReceivePaymentScreen,
+  PaymentHistoryScreen,
+} from '../screens';
 import {useTheme} from '../contexts/ThemeContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,6 +51,86 @@ export const RootNavigator: React.FC = () => {
         options={{
           headerShown: true,
           title: 'Hardware Security Test',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      {/* Phase 5: BLE Communication Foundation */}
+      <Stack.Screen
+        name="PeerDiscovery"
+        component={PeerDiscoveryScreen}
+        options={{
+          headerShown: true,
+          title: 'Peer Discovery',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="Connection"
+        component={ConnectionScreen}
+        options={{
+          headerShown: true,
+          title: 'Connection Details',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="BLESettings"
+        component={BLESettingsScreen}
+        options={{
+          headerShown: true,
+          title: 'BLE Settings',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      {/* Phase 6: Offline Payment Protocol */}
+      <Stack.Screen
+        name="SendPayment"
+        component={SendPaymentScreen}
+        options={{
+          headerShown: true,
+          title: 'Send Payment',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="ReceivePayment"
+        component={ReceivePaymentScreen}
+        options={{
+          headerShown: true,
+          title: 'Receive Payment',
+          headerStyle: {
+            backgroundColor: theme.background.primary,
+          },
+          headerTintColor: theme.text.primary,
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="PaymentHistory"
+        component={PaymentHistoryScreen}
+        options={{
+          headerShown: true,
+          title: 'Payment History',
           headerStyle: {
             backgroundColor: theme.background.primary,
           },

@@ -84,14 +84,18 @@ export const HomeScreen: React.FC = () => {
   };
 
   const handleSendPayment = () => {
-    if (offlineBalance === 0) {
-      Alert.alert(
-        'No Balance',
-        'Please transfer money to your offline balance first.',
-      );
-      return;
-    }
-    Alert.alert('Coming Soon', 'Send payment via BLE/NFC (Phase 5-6)');
+    // Navigate to Send Payment screen (Phase 6)
+    navigation.navigate('SendPayment');
+  };
+
+  const handlePeerDiscovery = () => {
+    // Navigate to Peer Discovery screen (Phase 5)
+    navigation.navigate('PeerDiscovery');
+  };
+
+  const handlePaymentHistory = () => {
+    // Navigate to Payment History screen (Phase 6)
+    navigation.navigate('PaymentHistory');
   };
 
   const totalBalance = onlineBalance + offlineBalance;
@@ -265,6 +269,28 @@ export const HomeScreen: React.FC = () => {
             <Button
               title="Transaction History"
               onPress={() => (navigation as any).navigate('Transactions')}
+              variant="ghost"
+              size="large"
+              style={styles.actionButton}
+            />
+          </View>
+
+          <Text style={[styles.sectionTitle, {marginTop: staticTheme.spacing.lg}]}>
+            BLE & Payments (Phase 5-6)
+          </Text>
+
+          <View style={styles.actionsGrid}>
+            <Button
+              title="Peer Discovery"
+              onPress={handlePeerDiscovery}
+              variant="outline"
+              size="large"
+              style={styles.actionButton}
+            />
+
+            <Button
+              title="Payment History"
+              onPress={handlePaymentHistory}
               variant="ghost"
               size="large"
               style={styles.actionButton}

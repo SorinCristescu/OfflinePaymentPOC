@@ -55,5 +55,9 @@
 	<array>
 		<string>MaterialCommunityIcons.ttf</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This app needs Bluetooth to enable offline peer-to-peer payments</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This app needs Bluetooth to send and receive offline payments</string>
 </dict>
 </plist>
